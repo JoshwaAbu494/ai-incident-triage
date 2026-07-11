@@ -1,0 +1,14 @@
+﻿const express = require('express');
+const incidentRoutes = require('./routes/incidentRoutes');
+const repositoryRoutes = require('./routes/repositoryRoutes');
+
+const app = express();
+app.use(express.json());
+
+app.use('/api/incidents', incidentRoutes);
+app.use('/api/repository', repositoryRoutes);
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Incident triage backend running on http://localhost:${PORT}`);
+});
