@@ -1,0 +1,9 @@
+{
+  "name": "sample-repository",
+  "version": "1.0.0",
+  "description": "Intentionally buggy sample app used to test the incident-triage RAG pipeline. Not part of the triage system itself.",
+  "main": "demo.js",
+  "scripts": {
+    "start": "node demo.js"
+  }
+}
