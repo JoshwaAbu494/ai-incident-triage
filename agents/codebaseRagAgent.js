@@ -14,6 +14,9 @@ Respond with ONLY a JSON object, no markdown, no explanation, in this exact shap
   "suggestedAction": string
 }
 
+"rootCause" must be a full 1-2 sentence explanation of WHY the code causes the error —
+describe the actual logical mistake (e.g. a missing null check, an off-by-one, a missing
+await). Do not just name the function or label a candidate number; explain the bug itself.
 "confidence" is a number between 0 and 1. "relevantCode" should be the exact code snippet
 you identified as responsible. If none of the candidates look responsible, say so in
 "rootCause" and set "confidence" low.`;
