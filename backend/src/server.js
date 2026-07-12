@@ -1,4 +1,6 @@
-﻿const express = require('express');
+﻿require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
+
+const express = require('express');
 const incidentRoutes = require('./routes/incidentRoutes');
 const repositoryRoutes = require('./routes/repositoryRoutes');
 
