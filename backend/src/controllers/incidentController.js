@@ -2,10 +2,12 @@
   createIncident,
   getAllIncidents,
   findIncidentById,
+  updateIncidentStatus,
 } = require('../services/incidentStore');
+const { analyzeIncident } = require('../../../agents/orchestrator');
 
 // POST /api/incidents/analyze
-function analyzeIncident(req, res) {
+async function analyzeIncidentHandler(req, res) {
   const { title, log } = req.body;
 
   if (!title || !log) {
@@ -14,13 +16,23 @@ function analyzeIncident(req, res) {
 
   const incident = createIncident(title, log);
 
-  // The agent pipeline (orchestrator + 3 agents) isn't connected yet —
-  // that's Phase 8. For now we just save the incident and confirm receipt.
-  res.status(201).json({
-    incidentId: incident.id,
-    status: incident.status,
-    message: 'Incident saved. Analysis pipeline connects in Phase 8.',
-  });
+  try {
+    const analysis = await analyzeIncident({ title, log });
+    updateIncidentStatus(incident.id, 'completed', analysis);
+
+    res.status(201).json({
+      incidentId: incident.id,
+      status: 'completed',
+      analysis,
+    });
+  } catch (err) {
+    updateIncidentStatus(incident.id, 'failed', null);
+    res.status(500).json({
+      incidentId: incident.id,
+      status: 'failed',
+      error: err.message,
+    });
+  }
 }
 
 // GET /api/incidents
@@ -39,4 +51,4 @@ function getIncidentById(req, res) {
   res.json(incident);
 }
 
-module.exports = { analyzeIncident, listIncidents, getIncidentById };
+module.exports = { analyzeIncident: analyzeIncidentHandler, listIncidents, getIncidentById };
