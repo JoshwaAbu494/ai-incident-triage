@@ -1,26 +1,40 @@
-﻿const MOCK_RESULT = {
-  logAnalysis: {
-    errorType: 'TypeError',
-    message: "Cannot read properties of undefined (reading 'name')",
-    file: 'src/services/userService.js',
-    functionName: 'getUserProfile',
-    line: 19,
-    severity: 'high',
-  },
-  ragAnalysis: {
-    rootCause: 'The database query can return undefined, but the code accesses user.name without checking whether user exists.',
-    confidence: 0.9,
-  },
-  fixSuggestion: {
-    originalCode: 'return user.name;',
-    suggestedCode: 'return user?.name ?? null;',
-    explanation: 'Added a null check before accessing user.name.',
-    testSuggestion: 'Call getUserProfile with a non-existent user ID and verify it returns null instead of throwing.',
-  },
-};
+﻿import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+
+const API_URL = 'http://localhost:4000';
 
 function IncidentResult() {
-  const { logAnalysis, ragAnalysis, fixSuggestion } = MOCK_RESULT;
+  const { id } = useParams();
+  const [incident, setIncident] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/incidents/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Incident not found');
+        return res.json();
+      })
+      .then((data) => {
+        setIncident(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) return <div className="page"><h1>Incident Result</h1><p>Loading...</p></div>;
+  if (error) return <div className="page"><h1>Incident Result</h1><p>Error: {error}</p></div>;
+  if (incident.status === 'pending') {
+    return <div className="page"><h1>Incident Result</h1><p>Analysis still in progress or failed to save. Try refreshing.</p></div>;
+  }
+  if (!incident.analysis) {
+    return <div className="page"><h1>Incident Result</h1><p>No analysis available for this incident.</p></div>;
+  }
+
+  const { logAnalysis, ragAnalysis, fixSuggestion } = incident.analysis;
 
   return (
     <div className="page">
@@ -58,8 +72,6 @@ function IncidentResult() {
         <h2>Test Suggestion</h2>
         <p>{fixSuggestion.testSuggestion}</p>
       </section>
-
-      <p className="note">Real data connects in Phase 11.</p>
     </div>
   );
 }

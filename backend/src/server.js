@@ -1,10 +1,12 @@
 ﻿require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 
 const express = require('express');
+const cors = require('cors');
 const incidentRoutes = require('./routes/incidentRoutes');
 const repositoryRoutes = require('./routes/repositoryRoutes');
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.use('/api/incidents', incidentRoutes);
