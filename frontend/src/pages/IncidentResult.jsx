@@ -27,6 +27,17 @@ function IncidentResult() {
 
   if (loading) return <div className="page"><h1>Incident Result</h1><p>Loading...</p></div>;
   if (error) return <div className="page"><h1>Incident Result</h1><p>Error: {error}</p></div>;
+  if (incident.status === 'failed') {
+    return (
+      <div className="page">
+        <h1>Incident Result</h1>
+        <p style={{ color: '#dc2626' }}>
+          Analysis failed for this incident. This usually means the error log didn't contain
+          enough information for the agents to identify a root cause.
+        </p>
+      </div>
+    );
+  }
   if (incident.status === 'pending') {
     return <div className="page"><h1>Incident Result</h1><p>Analysis still in progress or failed to save. Try refreshing.</p></div>;
   }
