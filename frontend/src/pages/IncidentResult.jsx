@@ -31,7 +31,7 @@ function IncidentResult() {
     return (
       <div className="page">
         <h1>Incident Result</h1>
-        <p style={{ color: '#dc2626' }}>
+        <p style={{ color: 'var(--sev-high)' }}>
           Analysis failed for this incident. This usually means the error log didn't contain
           enough information for the agents to identify a root cause.
         </p>
@@ -46,37 +46,46 @@ function IncidentResult() {
   }
 
   const { logAnalysis, ragAnalysis, fixSuggestion } = incident.analysis;
+  const confidencePct = Math.round(ragAnalysis.confidence * 100);
 
   return (
     <div className="page">
       <h1>Incident Result</h1>
 
       <section className="card">
+        <div className={`triage-tag severity-${logAnalysis.severity}`}>
+          <span className="triage-tag-type">{logAnalysis.errorType}</span>
+          <span className="triage-tag-label">{logAnalysis.severity}</span>
+        </div>
         <h2>Incident Summary</h2>
-        <p><strong>Error Type:</strong> {logAnalysis.errorType}</p>
-        <p><strong>Severity:</strong> {logAnalysis.severity}</p>
+        <p><strong>Error Type</strong> {logAnalysis.errorType}</p>
+        <p><strong>Severity</strong> {logAnalysis.severity}</p>
       </section>
 
       <section className="card">
+        <span className="eyebrow">Stage 01 — Log Analyzer</span>
         <h2>Log Analysis</h2>
-        <p><strong>File:</strong> {logAnalysis.file}</p>
-        <p><strong>Function:</strong> {logAnalysis.functionName}</p>
-        <p><strong>Line:</strong> {logAnalysis.line}</p>
+        <p><strong>File</strong> {logAnalysis.file}</p>
+        <p><strong>Function</strong> {logAnalysis.functionName}</p>
+        <p><strong>Line</strong> {logAnalysis.line}</p>
       </section>
 
       <section className="card">
+        <span className="eyebrow">Stage 02 — Codebase RAG Analyzer</span>
         <h2>Root Cause Analysis</h2>
         <p>{ragAnalysis.rootCause}</p>
-        <p><strong>Confidence:</strong> {Math.round(ragAnalysis.confidence * 100)}%</p>
+        <div className="meter"><div className="meter-fill" style={{ width: `${confidencePct}%` }} /></div>
+        <p className="meter-label">{confidencePct}% confidence</p>
       </section>
 
       <section className="card">
+        <span className="eyebrow">Stage 03 — Fix Suggestion Agent</span>
         <h2>Suggested Fix</h2>
-        <p><strong>Original:</strong></p>
+        <p><strong>Original</strong></p>
         <pre>{fixSuggestion.originalCode}</pre>
-        <p><strong>Suggested:</strong></p>
+        <p><strong>Suggested</strong></p>
         <pre>{fixSuggestion.suggestedCode}</pre>
-        <p><strong>Explanation:</strong> {fixSuggestion.explanation}</p>
+        <p><strong>Explanation</strong> {fixSuggestion.explanation}</p>
       </section>
 
       <section className="card">

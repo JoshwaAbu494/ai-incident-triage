@@ -49,9 +49,17 @@ function AnalyzeIncident() {
           <textarea value={log} onChange={(e) => setLog(e.target.value)} rows={8} placeholder="Paste the raw stack trace here" required />
         </label>
         <button type="submit" disabled={loading}>
-          {loading ? 'Analyzing... (agents take 10-20s)' : 'Analyze'}
+          {loading ? 'Analyzing...' : 'Analyze'}
         </button>
-        {error && <p style={{ color: '#dc2626' }}>Error: {error}</p>}
+        {loading && (
+          <div className="pulse-wrap">
+            <svg viewBox="0 0 200 40" className="pulse-line">
+              <path d="M0 20 L60 20 L75 5 L90 35 L105 20 L200 20" />
+            </svg>
+            <span>agents running — 10-20s</span>
+          </div>
+        )}
+        {error && <p style={{ color: 'var(--sev-high)' }}>Error: {error}</p>}
       </form>
     </div>
   );
