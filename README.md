@@ -1,4 +1,4 @@
-﻿# AI-Powered Autonomous Incident Triage System
+# AI-Powered Autonomous Incident Triage System
 
 An AI-powered DevOps tool that takes a software error log, automatically finds the relevant source code using Retrieval-Augmented Generation (RAG), identifies the likely root cause, and proposes a minimal fix -- displayed on a web dashboard.
 
@@ -157,7 +157,11 @@ fixSuggestion.risk: low
 
 ## Screenshots
 
-To be added -- see the Incident Result, Analyze Incident, and Incident History pages.
+![Incident Result](screenshots/incident-result.png)
+
+![Analyze Incident](screenshots/analyze-incident.png)
+
+![Incident History](screenshots/incident-history.png)
 
 ## Demo Video
 
